@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Particle Flow System - Simples</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        canvas {
+            background: #16213e;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .explanation {
+            background: #0f3460;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        h1 { color: #e94560; }
+        code { 
+            background: #0d2b45; 
+            padding: 2px 5px; 
+            border-radius: 3px; 
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Particle Flow System - Versão Simplificada</h1>
+        
+        <div class="explanation">
+            <p>Esta é uma versão simplificada do nosso sistema de partículas impressionante.</p>
+            <p><strong>Como funciona:</strong> Cada pequeno círculo colorido é uma "partícula" que segue regras simples de física.</p>
+        </div>
+
+        <canvas id="simpleCanvas" width="760" height="400"></canvas>
+
+        <div class="explanation">
+            <h3>Conceitos Demonstrados:</h3>
+            <p>• <code>requestAnimationFrame</code> para animações suaves</p>
+            <p>• <code>Math.random()</code> para posições e cores aleatórias</p>
+            <p>• <code>addEventListener</code> para interação com mouse</p>
+            <p>• <code>canvas</code> para renderização 2D eficiente</p>
+        </div>
+
+        <button onclick="resetParticles()">Reiniciar Partículas</button>
+    </div>
+
+    <script>
+        // Elementos
+        const canvas = document.getElementById('simpleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Partículas
+        let particles = [];
+
+        // Classe Partícula Simplificada
+        class SimpleParticle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 5 + 1;
+                this.color = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                this.speedX = (Math.random() - 0.5) * 2;
+                this.speedY = (Math.random() - 0.5) * 2;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // Borda
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Inicializar partículas
+        function initParticles(count) {
+            particles = [];
+            for (let i = 0; i < count; i++) {
+                particles.push(new SimpleParticle());
+            }
+        }
+
+        // Animação
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Função de reset
+        function resetParticles() {
+            initParticles(50);
+        }
+
+        // Iniciar
+        initParticles(50);
+        animate();
+
+        // Interatividade básica
+        canvas.addEventListener('click', (e) => {
+            for (let i = 0; i < 10; i++) {
+                const p = new SimpleParticle();
+                p.x = e.offsetX;
+                p.y = e.offsetY;
+                particles.push(p);
+            }
+        });
+    </script>
+</body>
+</html>
